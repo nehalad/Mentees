@@ -6,15 +6,15 @@ import numpy as np
 with open('email.txt', 'r') as myfile:
     data=myfile.read().replace('\n', ' ')
 
-#myRegularExpression =r"([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)"
-#stringTotest="My name is Rupin  and my email is rupin@curiositygym.com and aryan.shah@dbis.edu.in"
-#a=re.findall(myRegularExpression, data)
-#print(a)
+myRegularExpression =r"(\b(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4})\b|\b(\(\d{3}\)\s*\d{3}[-\.\s]??\d{4})\b|\b(\d{3}[-\.\s]??\d{4})\b)"
+stringTotest="My name is Rupin  and my email is rupin@curiositygym.com and aryan.shah@dbis.edu.in"
+a=re.findall(myRegularExpression, data)
+print(a)
 
-words=data.split(" ")
-counts = Counter(words).most_common(20)
-print(counts)
-labels, values = zip(counts[0].items())
+#words=data.split(" ")
+#counts = Counter(words).most_common(20)
+#print(counts)
+#labels, values = zip(counts[0].items())
 ##
 ### sort your values in descending order
 ##indSort = np.argsort(values)[::-1]

@@ -36,7 +36,7 @@ void setup()
       // this resets all the neopixels to an off state
       strip.Begin();
       strip.Show();
-      pinMode(sensorPin, INPUT);
+      pinMode(sensorPin, INPUT_PULLUP);
       pinMode(buzzerPin, OUTPUT);
       digitalWrite(buzzerPin, LOW);
       int sensorPinState = digitalRead(sensorPin);
