@@ -8,13 +8,13 @@ import io
 class Application():
 
     def detectQRImage(self):
-        stream = io.BytesIO()
+        stream = BytesIO()
         camera = PiCamera()
         camera.resolution = (1024, 768)
-        while True:
-            camera.start_preview()
+        camera.start_preview()
+        while True:            
             #time.sleep(2)
-            camera.capture(stream, format='jpeg')
+            camera.capture(stream, format='jpeg',resize=(320, 240))
             # "Rewind" the stream to the beginning so we can read its content
             stream.seek(0)         
             image = Image.open(stream)
