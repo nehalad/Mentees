@@ -3,6 +3,7 @@ import numpy as np
 from PIL import Image
 from pyzbar.pyzbar import decode
 import picamera
+import time
 import io
 class Application():
 
