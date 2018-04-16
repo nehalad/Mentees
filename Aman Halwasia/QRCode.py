@@ -15,7 +15,7 @@ class Application():
         while True:            
             #time.sleep(2)
             #camera.capture(stream, format='jpeg',resize=(320, 240))
-            camera.start_recording(stream, format='h264', quality=23
+            camera.start_recording(stream, format='h264', quality=23)
             # "Rewind" the stream to the beginning so we can read its content
             stream.seek(0)         
             image = Image.open(stream)
