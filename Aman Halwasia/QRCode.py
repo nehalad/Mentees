@@ -10,7 +10,7 @@ class Application():
     def detectQRImage(self):
         stream = BytesIO()
         camera = PiCamera()
-        camera.resolution = (1024, 768)
+        #camera.resolution = (1024, 768)
         camera.start_preview()
         while True:            
             #time.sleep(2)
