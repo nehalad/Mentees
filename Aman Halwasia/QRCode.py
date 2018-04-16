@@ -4,7 +4,7 @@ from PIL import Image
 from pyzbar.pyzbar import decode
 from picamera import PiCamera
 import time
-import io
+from io import BytesIO
 class Application():
 
     def detectQRImage(self):
