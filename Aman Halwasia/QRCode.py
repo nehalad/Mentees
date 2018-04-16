@@ -20,8 +20,8 @@ class Application():
             stream.seek(0)         
             image = Image.open(stream)
             decoded_codes=decode(image)
-            if(decoded_codes):            
-                print(decoded_codes)
+            #if(decoded_codes):            
+            print(decoded_codes)
             
            
 
