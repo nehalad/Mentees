@@ -2,20 +2,24 @@ import cv2
 import numpy as np
 from PIL import Image
 from pyzbar.pyzbar import decode
+import picamera
+import io
 class Application():
 
-    def detect_red_circle(self):
-        cam = cv2.VideoCapture(0)
-        while True:
-            ret, frame = cam.read()
-	    print(frame)
-            impil=Image.fromarray(frame)
-            a=decode(impil)
+    def detectQRImage(self):
+        stream = io.BytesIO()
+        with picamera.PiCamera() as camera:
+            camera.start_preview()
+            time.sleep(2)
+            camera.capture(stream, format='jpeg')
+            # "Rewind" the stream to the beginning so we can read its content
+            stream.seek(0)         
+            image = Image.open(stream)
+            a=decode(image)
             print(a)
             
-            if cv2.waitKey(10) & 0xFF == ord('q'):
-                break
+           
 
 if __name__ == '__main__':
     app =Application()
-    app.detect_red_circle()
+    app.detectQRImage()
