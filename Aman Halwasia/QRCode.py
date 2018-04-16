@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from PIL import Image
 from pyzbar.pyzbar import decode
-import picamera
+from picamera import PiCamera
 import time
 import io
 class Application():
