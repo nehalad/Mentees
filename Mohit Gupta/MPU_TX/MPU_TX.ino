@@ -1,14 +1,19 @@
-
-
 // Include libraries necessary for the radios
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
 
 #define PI_CONST 180/M_PI
+#define CE_PIN   9
+#define CSN_PIN 10
+#define JOYSTICK_X A0
+#define JOYSTICK_Y A1
+#define SW 4
 
 //set up name for serial communication of the radio
 RF24 radio(7,8);
+int joystick[2];
+
 
 // I2Cdev and MPU6050 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
@@ -43,7 +48,6 @@ MPU6050 mpu;
    The solution requires a modification to the Arduino USBAPI.h file, which
    is fortunately simple, but annoying. This will be fixed in the next IDE
    release. For more info, see these links:
-
    http://arduino.cc/forum/index.php/topic,109987.0.html
    http://code.google.com/p/arduino/issues/detail?id=958
  * ========================================================================= */
@@ -108,9 +112,6 @@ float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gra
 // packet structure for InvenSense teapot demo
 uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
 
-int x_key=A1;
-int y_key=A0;
-int sw=4;
 
 
 
@@ -217,10 +218,11 @@ void setup() {
 
     // configure LED for output
     pinMode(LED_PIN, OUTPUT);
-    pinMode(x_key, INPUT);
-    pinMode(y_key, INPUT);
-    pinMode(sw, INPUT);
-   
+
+
+    Serial.begin(9600); /* Opening the Serial Communication */
+  radio.begin();
+  radio.openWritingPipe(0xF0F0F0F0A1LL);
 
 
 }
@@ -257,6 +259,9 @@ void loop() {
         // .
         // .
         // .
+        value.joystick_x_info=analogRead(JOYSTICK_X);
+        value.joystick_y_info=analogRead(JOYSTICK_Y);
+        value. button_state_info=digitalRead(SW);
         radio.write(&value, sizeof(value));
     }
 
