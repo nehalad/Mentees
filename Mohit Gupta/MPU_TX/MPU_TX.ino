@@ -8,7 +8,7 @@
 #define CSN_PIN 10
 #define JOYSTICK_X A0
 #define JOYSTICK_Y A1
-#define SW 4
+#define SW 6
 
 //set up name for serial communication of the radio
 RF24 radio(7,8);
@@ -201,7 +201,7 @@ void setup() {
         mpuIntStatus = mpu.getIntStatus();
 
         // set our DMP Ready flag so the main loop() function knows it's okay to use it
-        Serial.println(F("DMP ready! Waiting for first interrupt..."));
+        //Serial.println(F("DMP ready! Waiting for first interrupt..."));
         dmpReady = true;
 
         // get expected DMP packet size for later comparison
@@ -218,9 +218,9 @@ void setup() {
 
     // configure LED for output
     pinMode(LED_PIN, OUTPUT);
+    pinMode(SW, INPUT_PULLUP);
 
-
-    Serial.begin(9600); /* Opening the Serial Communication */
+    //Serial.begin(115200); /* Opening the Serial Communication */
   radio.begin();
   radio.openWritingPipe(0xF0F0F0F0A1LL);
 
@@ -261,8 +261,27 @@ void loop() {
         // .
         value.joystick_x_info=analogRead(JOYSTICK_X);
         value.joystick_y_info=analogRead(JOYSTICK_Y);
-        value. button_state_info=digitalRead(SW);
+        value.button_state_info=!digitalRead(SW);
         radio.write(&value, sizeof(value));
+        
+        /*Serial.print(value.yaw_info);
+        Serial.print("\t");
+
+         Serial.print(value.pitch_info);
+        Serial.print("\t");
+
+         Serial.print(value.roll_info);
+        Serial.print("\t");
+
+         Serial.print(value.joystick_x_info);
+        Serial.print("\t");
+
+         Serial.print(value.joystick_y_info);
+        Serial.print("\t");
+         Serial.print(value.button_state_info);
+        Serial.print("\t");
+        Serial.println("");*/
+        
     }
 
     // reset interrupt flag and get INT_STATUS byte
@@ -305,14 +324,7 @@ void loop() {
             mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
             float yaw=ypr[0] * PI_CONST;
             float pitch=ypr[1] * PI_CONST;
-            float roll=ypr[2] * PI_CONST;
-            /*Serial.print("ypr\t");
-            Serial.print(yaw);
-            Serial.print("\t");
-            Serial.print(pitch);
-            Serial.print("\t");
-            Serial.println(roll);*/
-            
+            float roll=ypr[2] * PI_CONST;            
              
 
            
@@ -322,7 +334,7 @@ void loop() {
             
 
             
-            //Serial.println("Sent");
+            Serial.println("Sent");
         #endif
            
             
