@@ -1,6 +1,8 @@
 #include <SPI.h>
 #include "nRF24L01.h"
 #include "RF24.h"
+#define x_centre 485
+#define y_centre 503
 int joystick[2];
 RF24 radio(7, 8);
 
@@ -10,6 +12,10 @@ unsigned long t1;
 void setup()
 {
   //pinMode(13,OUTPUT);
+  pinMode (1, OUTPUT);//M R
+pinMode (2, OUTPUT); //M R
+pinMode (3, OUTPUT); //M L
+pinMode (4, OUTPUT); //M L
 
   while (!Serial);
   Serial.begin(115200);
@@ -23,7 +29,15 @@ void setup()
 }
 
 byte pipeNum = 0; //variable to hold which reading pipe sent data
-
+typedef struct Value {
+        float x;
+        float y;
+        float z;
+        int joystick_x_info;
+        int joystick_y_info;
+        int button_state_info;
+      } Value;
+      Value value;
 void loop()
 {
   t1 = millis();
@@ -32,20 +46,12 @@ void loop()
     digitalWrite(13,LOW);
     delay(500);
   */
-  if (t1 - t0 > 100) {
+  
     if (radio.available(&pipeNum))
     {
       //char text[32] = {0};
       //int text[3];
-      typedef struct Value {
-        float x;
-        float y;
-        float z;
-        int e0;
-        int e1;
-        int e2;
-      } Value;
-      Value value;
+      
       //radio.read(&text, sizeof(text));
       radio.read(&value, sizeof(value));
       //int coordinates[] ={value.x,value.y};
@@ -56,12 +62,12 @@ void loop()
       Serial.print(value.y);
       Serial.print("\t");
       Serial.print(value.z);
-      Serial.print("X = ");
-      Serial.print(value.e0);
-      Serial.print(" Y = ");
-      Serial.print(value.e1);
-      Serial.print("button state =");
-       Serial.print(value.e2);
+     Serial.print("\t");
+      Serial.print(value.joystick_x_info);
+      Serial.print("\t");
+      Serial.print(value.joystick_y_info);
+      Serial.print("\t");
+       Serial.println(value.button_state_info);
       t0 = t1;
 
       //Serial.println("X-acceleration");
@@ -71,12 +77,47 @@ void loop()
       //Serial.println(value);
       //delay(100);
 
-    }
-  }
+  if (value.joystick_x_info<x_centre){
+digitalWrite (1, LOW);
+digitalWrite (2, HIGH);
+digitalWrite (3, HIGH);
+digitalWrite (4, LOW);
+Serial.println( "LEFT");
 
-
-  else
-  {
-    Serial.println("No radio available");
-  }
 }
+else if (value.joystick_x_info>x_centre){
+  digitalWrite (1, HIGH);
+digitalWrite (2, LOW);
+digitalWrite (3, LOW);
+digitalWrite (4, HIGH);
+Serial.println( "Right");
+  
+}
+else if (value.joystick_y_info>y_centre){
+digitalWrite (1, HIGH);
+digitalWrite (2, LOW);
+digitalWrite (3, HIGH);
+digitalWrite (4, LOW);
+Serial.println( "Forward");
+}
+else if (value.joystick_y_info<y_centre){
+digitalWrite (1, LOW);
+digitalWrite (2, HIGH);
+digitalWrite (3, LOW);
+digitalWrite (4, HIGH);
+Serial.println( "Back");
+}
+else {
+digitalWrite (1, LOW);
+digitalWrite (2, LOW);
+digitalWrite (3, LOW);
+digitalWrite (4, LOW);
+}
+    }
+    else
+  {
+    //Serial.println("No radio available");
+  }  }
+
+
+
